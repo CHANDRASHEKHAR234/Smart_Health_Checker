@@ -7,6 +7,7 @@ import PredictionResults from "@/components/PredictionResults";
 import BMICalculator from "@/components/BMICalculator";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { predictDisease, PredictionResult } from "@/lib/prediction-engine";
+import MedicalChatbot from "@/components/MedicalChatbot";
 
 const Index = () => {
   const [symptoms, setSymptoms] = useState<string[]>([]);
@@ -129,6 +130,7 @@ const Index = () => {
       </main>
 
       <Footer />
+      <MedicalChatbot />
     </div>
   );
 };
