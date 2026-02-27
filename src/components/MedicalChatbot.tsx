@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Stethoscope, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { ALL_SYMPTOMS, predictDisease, PredictionResult } from "@/lib/prediction-engine";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslations } from "@/lib/translations";
 
 interface ChatMessage {
   id: string;
@@ -87,6 +89,8 @@ const MedicalChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -164,9 +168,9 @@ const MedicalChatbot = () => {
             </div>
             <div>
               <h3 className="text-sm font-display font-semibold text-primary-foreground">
-                Health Assistant
+                {t.healthAssistant}
               </h3>
-              <p className="text-xs text-primary-foreground/70">AI-powered symptom analysis</p>
+              <p className="text-xs text-primary-foreground/70">{t.chatSubtitle}</p>
             </div>
           </div>
 
@@ -232,7 +236,7 @@ const MedicalChatbot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Describe your symptoms..."
+                placeholder={t.chatPlaceholder}
                 className="flex-1 rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
               <button
