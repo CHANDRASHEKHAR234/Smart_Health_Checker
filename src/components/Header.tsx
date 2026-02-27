@@ -1,11 +1,13 @@
 import { Activity, Shield, Heart, Sun, Moon, Globe } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage, Language } from "@/hooks/useLanguage";
+import { useTranslations } from "@/lib/translations";
 import { useState, useRef, useEffect } from "react";
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, languageNames } = useLanguage();
+  const t = useTranslations(language);
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
@@ -29,21 +31,20 @@ const Header = () => {
             <Activity className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-lg font-display font-bold text-foreground">Smart Health AI</h1>
-            <p className="text-xs text-muted-foreground">Symptom Checker</p>
+            <h1 className="text-lg font-display font-bold text-foreground">{t.appName}</h1>
+            <p className="text-xs text-muted-foreground">{t.subtitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
             <Shield className="w-4 h-4 text-primary" />
-            <span>Secure & Private</span>
+            <span>{t.securePrivate}</span>
           </div>
           <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground mr-2">
             <Heart className="w-4 h-4 text-medical-green" />
-            <span>AI-Powered</span>
+            <span>{t.aiPowered}</span>
           </div>
 
-          {/* Dark/Light mode toggle */}
           <button
             onClick={toggleTheme}
             className="w-9 h-9 rounded-lg flex items-center justify-center bg-secondary text-secondary-foreground hover:bg-accent transition-colors"
@@ -52,7 +53,6 @@ const Header = () => {
             {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </button>
 
-          {/* Language selector */}
           <div ref={langRef} className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}

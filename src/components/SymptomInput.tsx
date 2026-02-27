@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Search, X, ChevronDown } from "lucide-react";
 import { ALL_SYMPTOMS } from "@/lib/prediction-engine";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslations } from "@/lib/translations";
 
 interface SymptomInputProps {
   selectedSymptoms: string[];
@@ -14,6 +16,8 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
   const [filteredSymptoms, setFilteredSymptoms] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { language } = useLanguage();
+  const t = useTranslations(language);
 
   useEffect(() => {
     const filtered = ALL_SYMPTOMS.filter(
@@ -48,7 +52,6 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
-      // Try to match or add comma-separated
       const parts = inputValue.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
       const newSymptoms = [...selectedSymptoms];
       parts.forEach((part) => {
@@ -65,10 +68,9 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
   return (
     <div className="w-full space-y-3" ref={dropdownRef}>
       <label className="block text-sm font-medium text-foreground">
-        Enter your symptoms
+        {t.enterSymptoms}
       </label>
 
-      {/* Selected symptoms */}
       {selectedSymptoms.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedSymptoms.map((symptom) => (
@@ -87,7 +89,6 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
         </div>
       )}
 
-      {/* Input field */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
@@ -99,7 +100,7 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
           }}
           onFocus={() => setIsDropdownOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Type symptoms separated by commas (e.g., fever, headache)"
+          placeholder={t.symptomPlaceholder}
           className="w-full pl-10 pr-10 py-3 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
         />
         <ChevronDown
@@ -108,7 +109,6 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
         />
       </div>
 
-      {/* Dropdown */}
       {isDropdownOpen && filteredSymptoms.length > 0 && (
         <div className="glass-strong rounded-xl max-h-48 overflow-y-auto animate-slide-up">
           {filteredSymptoms.map((symptom) => (
@@ -123,9 +123,7 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
         </div>
       )}
 
-      <p className="text-xs text-muted-foreground">
-        Select from the dropdown or type and press Enter. You can enter multiple symptoms separated by commas.
-      </p>
+      <p className="text-xs text-muted-foreground">{t.symptomHint}</p>
     </div>
   );
 };
