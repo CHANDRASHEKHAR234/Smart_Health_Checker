@@ -4,6 +4,7 @@ import { ALL_SYMPTOMS } from "@/lib/prediction-engine";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTranslations } from "@/lib/translations";
+import { getTranslatedSymptom } from "@/lib/medical-translations";
 
 interface SymptomInputProps {
   selectedSymptoms: string[];
@@ -20,13 +21,15 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
   const t = useTranslations(language);
 
   useEffect(() => {
+    const searchLower = inputValue.toLowerCase();
     const filtered = ALL_SYMPTOMS.filter(
       (s) =>
-        s.includes(inputValue.toLowerCase()) &&
-        !selectedSymptoms.includes(s)
+        !selectedSymptoms.includes(s) &&
+        (s.includes(searchLower) ||
+          getTranslatedSymptom(s, language).toLowerCase().includes(searchLower))
     );
     setFilteredSymptoms(filtered);
-  }, [inputValue, selectedSymptoms]);
+  }, [inputValue, selectedSymptoms, language]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -55,7 +58,7 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
       const parts = inputValue.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
       const newSymptoms = [...selectedSymptoms];
       parts.forEach((part) => {
-        const match = ALL_SYMPTOMS.find((s) => s === part);
+        const match = ALL_SYMPTOMS.find((s) => s === part || getTranslatedSymptom(s, language).toLowerCase() === part);
         if (match && !newSymptoms.includes(match)) {
           newSymptoms.push(match);
         }
@@ -79,7 +82,7 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
               variant="secondary"
               className="px-3 py-1.5 text-sm bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
             >
-              {symptom}
+              {getTranslatedSymptom(symptom, language)}
               <X
                 className="w-3 h-3 ml-2"
                 onClick={() => removeSymptom(symptom)}
@@ -115,9 +118,9 @@ const SymptomInput = ({ selectedSymptoms, onChange }: SymptomInputProps) => {
             <button
               key={symptom}
               onClick={() => addSymptom(symptom)}
-              className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors first:rounded-t-xl last:rounded-b-xl capitalize"
+              className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors first:rounded-t-xl last:rounded-b-xl"
             >
-              {symptom}
+              {getTranslatedSymptom(symptom, language)}
             </button>
           ))}
         </div>
