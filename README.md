@@ -4,15 +4,6 @@
 
 **URL**(https://smart-health-checker-one.vercel.app/)
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
